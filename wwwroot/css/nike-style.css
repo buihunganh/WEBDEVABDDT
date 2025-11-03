@@ -1,0 +1,925 @@
+/* Nike Clone Custom Styles - Simplified */
+
+/* Global Styles */
+:root {
+    --nike-black: #000000;
+    --nike-gray: #8C8C8C;
+    --nike-light-gray: #F5F5F5;
+    --nike-hover: #E5E5E5;
+    --nike-border: #E5E5E5;
+}
+
+body {
+    font-family: "Helvetica Now Text", Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--nike-black);
+    background: #fff;
+}
+
+/* Top Bar Styles */
+.top-bar {
+    font-size: 0.75rem;
+    background-color: #000000 !important;
+    padding: 0.25rem 0;
+    display: flex;
+    align-items: center;
+    height: auto;
+}
+
+.top-bar .container-fluid {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.top-bar-links {
+    display: flex;
+    align-items: center;
+}
+
+.top-bar-links a {
+    transition: opacity 0.2s ease;
+}
+
+.top-bar-links a:hover {
+    opacity: 0.7;
+}
+
+.separator {
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 300;
+}
+
+/* Navigation Styles - Simple Layout */
+.navbar {
+    padding: 5px 0;
+    border-bottom: none;
+    box-shadow: none;
+}
+
+.navbar .container-fluid {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+@media (min-width: 992px) {
+    .navbar .navbar-brand {
+        position: absolute;
+        left: 1.5rem;
+        z-index: 10;
+    }
+    
+    .navbar > .container-fluid > .d-none.d-lg-flex {
+        position: absolute;
+        right: 1.5rem;
+        z-index: 10;
+    }
+    
+    .navbar .collapse.navbar-collapse {
+        display: flex !important;
+        flex: 1;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .navbar-brand {
+        font-size: 1.5rem !important;
+    }
+}
+
+.navbar-brand {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #000 !important;
+    letter-spacing: 0;
+    line-height: 1;
+}
+
+.navbar-brand:hover {
+    opacity: 0.7;
+}
+
+.navbar-nav .nav-link {
+    color: #000 !important;
+    font-size: 0.95rem;
+    font-weight: 400;
+    transition: color 0.25s ease, opacity 0.25s ease, transform 0.3s ease;
+    padding: 0.5rem 0.75rem !important;
+    letter-spacing: 0.01em;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #8C8C8C !important;
+    transform: translateY(-2px); /* Nâng các link khi hover */
+}
+
+/* Underline reveal animation for navbar links */
+.navbar-nav .nav-link {
+    position: relative;
+}
+
+.navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;
+    margin: auto;
+    width: 0;
+    height: 2px;
+    background: #000;
+    transition: width 200ms ease;
+}
+
+.navbar-nav .nav-link:hover::after,
+.navbar-nav .nav-link:focus-visible::after,
+.navbar-nav .nav-item.active .nav-link::after {
+    width: 100%;
+}
+
+/* Nav icons styling */
+.nav-icon {
+    transition: transform 0.25s ease, opacity 0.25s ease, filter 0.25s ease;
+    display: inline-block;
+}
+
+.nav-icon:hover {
+    transform: translateY(-2px) scale(1.1); /* Phóng to và nâng lên khi hover */
+    opacity: 0.85;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+}
+
+/* Search input */
+input[placeholder="Search"] {
+    transition: border-color 0.25s ease, width 200ms ease;
+}
+
+input[placeholder="Search"]:focus {
+    outline: none !important;
+    border-bottom-color: #000 !important;
+    box-shadow: none !important;
+}
+
+input[placeholder="Search"]::placeholder {
+    color: #8C8C8C;
+}
+
+/* Expand search width on focus (desktop) */
+@media (min-width: 992px) {
+    .navbar .position-relative input[placeholder="Search"] {
+        width: 150px;
+    }
+    .navbar .position-relative input[placeholder="Search"]:focus {
+        width: 220px;
+    }
+}
+
+/* Promotion Bar */
+.promotion-bar {
+    border-bottom: 1px solid #E5E5E5;
+    font-size: 0.875rem;
+    padding: 0.25rem 0 !important;
+    display: flex;
+    align-items: center;
+    transform: translateY(-10px); /* Chuyển động lên */
+    animation: slideIn 0.5s ease-in-out forwards;
+}
+
+.promotion-bar a {
+    color: #000;
+    text-decoration: underline;
+    transition: opacity 0.2s ease;
+}
+
+.promotion-bar a:hover {
+    opacity: 0.6;
+}
+
+/* Gentle card hover lift + shadow for common blocks */
+.feature-card,
+.deal-card {
+    transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.feature-card:hover,
+.deal-card:hover {
+    transform: translateY(-4px); /* Nâng card lên */
+    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+    border-color: #000;
+}
+
+/* Ensure all promo images fit their containers */
+.deal-image img,
+.feature-image img,
+.sbd-thumb img,
+.hero-video-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Unify gray backgrounds across modules */
+.deal-image,
+.feature-image,
+.sbd-thumb {
+    background-color: #EBEEF0 !important; /* unified soft gray */
+}
+
+/* Buttons subtle float on hover */
+.btn,
+.btn-dark,
+.btn-outline-dark {
+    transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+
+.btn:hover,
+.btn-dark:hover,
+.btn-outline-dark:hover {
+    transform: translateY(-2px); /* Nâng nút khi hover */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+}
+
+/* Reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* Hero Section */
+.hero-section {
+    margin: 0;
+}
+
+.hero-banner {
+    border-radius: 0;
+    overflow: hidden;
+}
+
+/* Hero video background */
+.hero-banner.has-video {
+    position: relative;
+    background: #000;
+}
+
+.hero-video-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.85; /* dim video more for better text contrast */
+}
+
+.hero-overlay {
+    pointer-events: none; /* allow clicks to pass through */
+}
+
+/* Hero text styling with strong contrast */
+.hero-small-text {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.9);
+    color: #ffffff !important;
+}
+
+.hero-main-title {
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.9), 0 2px 6px rgba(0, 0, 0, 0.95);
+    color: #ffffff !important;
+}
+
+.hero-subtitle {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.9);
+    color: #ffffff !important;
+}
+
+.hero-content-layer {
+    z-index: 2; /* above overlay */
+    pointer-events: none; /* allow buttons wrapper to handle events */
+}
+
+.hero-content-layer .btn,
+.hero-content-layer .btn-dark,
+.hero-content-layer .btn-outline-dark {
+    pointer-events: auto;
+}
+
+@media (max-width: 767.98px) {
+    .hero-banner {
+        min-height: 70vh !important;
+    }
+    .hero-content-layer h1 {
+        font-size: 2.25rem !important;
+    }
+}
+
+.hero-section .btn-dark {
+    transition: all 0.3s ease;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.hero-section .btn-dark:hover {
+    background: #333 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.hero-section .btn-outline-dark {
+    transition: all 0.3s ease;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+}
+
+.hero-section .btn-outline-dark:hover {
+    background: #000 !important;
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Feature Section */
+.section-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 3rem;
+    letter-spacing: -0.03em;
+}
+
+.feature-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 0 !important;
+    border: 1px solid #E5E5E5 !important;
+    overflow: hidden;
+    background: white;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px); /* Nâng lên khi hover */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+    border-color: #000 !important;
+}
+
+/* (reverted) removed uniform feature image background styles */
+
+/* Footer Styles */
+.footer-section {
+    background-color: #000 !important;
+    border-top: none;
+}
+
+/* Shop by Detail (simple cards) */
+.shop-by-detail .sbd-card {
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #E5E5E5;
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.shop-by-detail .sbd-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.shop-by-detail .sbd-thumb {
+    background: linear-gradient(180deg, #3a444a 0%, #4b545a 60%, #7b858d 100%);
+    aspect-ratio: 1 / 1; /* square */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.shop-by-detail .sbd-thumb img {
+    max-width: 92%;
+    max-height: 92%;
+    object-fit: contain;
+}
+
+/* spin animation when scrolling */
+.shop-by-detail .spin img {
+    animation: sbd-spin 800ms ease-out;
+}
+
+@keyframes sbd-spin {
+    from { transform: rotate(0deg) scale(1); }
+    to { transform: rotate(360deg) scale(1); }
+}
+
+.shop-by-detail .sbd-label {
+    text-align: center;
+    padding: 10px 8px 14px;
+    font-weight: 700;
+    color: #000;
+}
+
+/* Horizontal track with wheel-to-horizontal scroll */
+.shop-by-detail .sbd-track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(160px, 1fr);
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 6px;
+}
+
+.shop-by-detail .sbd-item {
+    scroll-snap-align: start;
+}
+
+.shop-by-detail .sbd-track::-webkit-scrollbar {
+    height: 6px;
+}
+.shop-by-detail .sbd-track::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 3px;
+}
+
+.footer-section h5,
+.footer-section h6 {
+    color: white;
+    font-weight: 600;
+}
+
+.footer-section p {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-section a {
+    transition: color 0.3s ease;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-section a:hover {
+    color: #8C8C8C !important;
+}
+
+/* Container adjustments */
+.container-fluid {
+    max-width: 1440px;
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+@media (max-width: 1200px) {
+    .container-fluid {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .container-fluid {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
+
+/* Badge styling */
+.badge {
+    font-weight: 600;
+    font-size: 0.6rem;
+    padding: 2px 5px;
+    line-height: 1;
+}
+
+.bg-danger {
+    background-color: #EF0027 !important;
+}
+
+/* Button styles */
+.btn-outline-dark {
+    color: #000;
+    border-color: #000;
+    font-weight: 500;
+}
+
+.btn-outline-dark:hover {
+    background-color: #000;
+    color: white;
+    border-color: #000;
+}
+
+/* Slide-in animation for promotion bar */
+@keyframes slideIn {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* ------------------------------ */
+/* Shop By Detail – tone & layout */
+/* Override to fit page width and Nike tone, with seamless marquee */
+.shop-by-detail {
+    overflow: hidden; /* hide overflow for marquee */
+}
+
+/* Track becomes a flex marquee (overrides grid/scroll styles above) */
+.shop-by-detail .sbd-track {
+    display: flex !important;
+    gap: 16px !important;
+    align-items: stretch;
+    width: max-content; /* shrink to content for correct translate */
+    overflow: visible !important;
+    scroll-snap-type: none !important;
+    padding-bottom: 0 !important;
+    animation: sbd-marquee 42s linear infinite; /* slow and smooth */
+    will-change: transform;
+}
+
+.shop-by-detail:hover .sbd-track {
+    animation-play-state: paused; /* pause on hover */
+}
+
+/* Each item is a fixed-width card to keep rhythm; responsive widths */
+.shop-by-detail .sbd-item {
+    flex: 0 0 auto;
+    width: 200px;
+}
+
+@media (min-width: 576px) {
+    .shop-by-detail .sbd-item { width: 220px; }
+}
+
+@media (min-width: 992px) {
+    .shop-by-detail .sbd-item { width: 240px; }
+}
+
+/* Card visuals tuned to tone */
+.shop-by-detail .sbd-card {
+    border-radius: 12px !important;
+    border-color: var(--nike-border) !important;
+    background: #fff !important;
+}
+
+/* Thumb keep 4:3 for marquee balance; center content */
+.shop-by-detail .sbd-thumb {
+    aspect-ratio: 4 / 3 !important;
+    padding: 10px;
+    background: linear-gradient(180deg, #F5F5F5 0%, #EBEEF0 100%) !important;
+}
+
+.shop-by-detail .sbd-thumb img {
+    max-width: 90% !important;
+    max-height: 90% !important;
+}
+
+/* Label weight, tracking and spacing fit Nike tone */
+.shop-by-detail .sbd-label {
+    font-weight: 700 !important;
+    letter-spacing: 0.01em;
+    padding: 10px 6px 14px !important;
+}
+
+/* Edge fade (where supported) for nicer clipping */
+.shop-by-detail .container-fluid {
+    /* create a gentle mask at container edges if supported */
+    -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,0) 0, #000 40px, #000 calc(100% - 40px), rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(90deg, rgba(0,0,0,0) 0, #000 40px, #000 calc(100% - 40px), rgba(0,0,0,0) 100%);
+}
+
+@keyframes sbd-marquee {
+    0%   { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-50%, 0, 0); } /* relies on duplicated items */
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .shop-by-detail .sbd-track { animation: none !important; transform: none !important; }
+}
+
+/* ----------------------------------------- */
+/* Mega dropdown for Men/Women/Kids (hover)  */
+.navbar-nav .nav-item.has-mega {
+    position: relative;
+}
+
+.navbar-nav .nav-item.has-mega .mega-dropdown {
+    /* use fixed so the dropdown is outside any stacking context created by page content */
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%) translateY(0);
+    top: var(--navbar-height, 64px);
+    min-width: 720px;
+    background: #fff;
+    border: 1px solid #E5E5E5;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+    border-radius: 14px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 160ms ease, transform 200ms ease, visibility 0s linear 200ms;
+    z-index: 99999;
+    padding: 18px 18px 12px;
+}
+
+/* keep original absolute behaviour on small screens (inside navbar collapse) */
+@media (max-width: 991.98px) {
+    .navbar-nav .nav-item.has-mega .mega-dropdown {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%) translateY(10px);
+        top: 100%;
+    }
+}
+
+.navbar-nav .nav-item.has-mega:hover > .mega-dropdown,
+.navbar-nav .nav-item.has-mega:focus-within > .mega-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+    transition-delay: 0s;
+}
+
+.mega-dropdown .mega-inner {
+    width: 100%;
+}
+
+.mega-dropdown .brand-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+}
+
+@media (max-width: 991.98px) {
+    .navbar-nav .nav-item.has-mega .mega-dropdown { min-width: 90vw; }
+    .mega-dropdown .brand-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.brand-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: #000;
+    border: 1px solid #E5E5E5;
+    border-radius: 12px;
+    background: #fff;
+    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.brand-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+    border-color: #000;
+}
+
+.brand-thumb {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #F5F5F5 0%, #EBEEF0 100%);
+}
+
+.brand-thumb img {
+    max-width: 86%;
+    max-height: 86%;
+    object-fit: contain;
+}
+
+.brand-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 8px 6px 12px;
+    text-align: center;
+}
+
+/* Text lists layout (two columns) for brand mega */
+.mega-columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 28px 48px;
+}
+
+.mega-col {}
+
+.mega-title {
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: 12px;
+}
+
+.mega-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mega-list li + li { margin-top: 10px; }
+
+.mega-list a {
+    color: #111;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 180ms ease, opacity 180ms ease;
+}
+
+.mega-list a:hover {
+    color: #8C8C8C;
+}
+
+@media (max-width: 991.98px) {
+    .mega-columns { grid-template-columns: 1fr; gap: 20px; }
+}
+
+/* Sticky subnav dùng chung */
+.men-page .brand-subnav,
+.women-page .brand-subnav,
+.kid-page .brand-subnav{
+  position: sticky;
+  top: var(--sticky-offset, 64px);
+  z-index: 1020;           /* dưới navbar/dropdown (1030) nhưng đủ cao so với grid */
+  background: #fff;
+  padding: 8px 0;
+  border-top: 1px solid #E5E5E5;
+  border-bottom: 1px solid #E5E5E5;
+
+  /* stretch theo viewport như trang Men */
+  margin-left: -3rem;  margin-right: -3rem;
+  padding-left: 3rem;  padding-right: 3rem;
+}
+
+@media (max-width: 1200px){
+  .men-page .brand-subnav,
+  .women-page .brand-subnav,
+  .kid-page .brand-subnav{
+    margin-left: -2rem;  margin-right: -2rem;
+    padding-left: 2rem;  padding-right: 2rem;
+  }
+}
+@media (max-width: 768px){
+  .men-page .brand-subnav,
+  .women-page .brand-subnav,
+  .kid-page .brand-subnav{
+    margin-left: -1.5rem;  margin-right: -1.5rem;
+    padding-left: 1.5rem;  padding-right: 1.5rem;
+  }
+}
+
+/* Heading dùng chung */
+.men-page .brand-heading,
+.women-page .brand-heading,
+.kid-page .brand-heading{
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+
+/* Avoid headings being hidden under sticky subnav when navigating to anchors */
+.men-page .brand-section { scroll-margin-top: calc(var(--sticky-offset, 64px) + 56px); }
+
+/* Smooth anchor scroll with offset handled by sticky subnav height via padding */
+html { scroll-behavior: smooth; }
+
+/* Remove bottom gap on men page */
+.men-page { padding-bottom: 0 !important; margin-bottom: 0 !important; }
+
+/* Auth pages - minimalist form styling consistent with tone */
+.auth .form-control { border-radius: 10px; }
+.auth .btn-dark { padding-left: 20px; padding-right: 20px; }
+
+/* Order button overlay */
+.men-card { position: relative; overflow: hidden; /* allow absolute-positioned controls like order button */ border-radius: 16px !important; box-shadow: 0 6px 24px rgba(0,0,0,0.09); min-height: 430px; display: flex; flex-direction: column; border: 1.5px solid #E5E5E5; background: #fff; transition: box-shadow .17s,border-color .13s,transform .17s; }
+
+/* subtle overlay / dim by reducing opacity of main parts (image + body) */
+.product-item .men-card .men-card-img-wrapper,
+.product-item .men-card .card-body {
+    transition: opacity .18s ease, filter .18s ease;
+}
+.product-item:hover .men-card .men-card-img-wrapper,
+.product-item:hover .men-card .card-body,
+.product-item:focus-within .men-card .men-card-img-wrapper,
+.product-item:focus-within .men-card .card-body {
+    opacity: 0.45;
+    filter: blur(0.6px) brightness(0.95);
+}
+
+/* centered square Order button */
+.order-btn {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, 12px);
+    opacity: 0;
+    transition: transform .18s ease, opacity .18s ease, box-shadow .18s, background-color .18s, color .18s;
+    z-index: 20; /* above dimmed content */
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    border-radius: 6px; /* slightly rounded square */
+    background-color: #ffffff; /* default: white */
+    color: #111; /* default: dark text */
+    border: 1px solid #E5E5E5;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+/* when hovering the card or focusing within it, show button but do NOT invert colors */
+.product-item:hover .order-btn,
+.product-item:focus-within .order-btn {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+    /* keep default white bg and dark text until the button itself is hovered */
+    background-color: #ffffff;
+    color: #111;
+    border-color: #E5E5E5;
+}
+
+/* hovering the button inverts colors to black background / white text */
+.order-btn:hover {
+    background-color: #111 !important;
+    color: #fff !important;
+    border-color: #111 !important;
+    transform: translate(-50%, -52%) !important; /* slight lift on hover */
+    box-shadow: 0 12px 28px rgba(0,0,0,0.18) !important;
+}
+
+/* active / focus state: keep inverted colors */
+.order-btn:active,
+.order-btn:focus,
+.order-btn:focus-visible {
+    background-color: #000 !important;
+    color: #fff !important;
+    border-color: #000 !important;
+    transform: translate(-50%, -52%) !important; /* keep lifted position when pressed/focused */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.28) !important;
+    outline: none;
+}
+
+.order-btn:focus-visible {
+    box-shadow: 0 0 0 4px rgba(0,0,0,0.08), 0 8px 20px rgba(0,0,0,0.28) !important;
+}
+
+/* Order modal styles */
+.order-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:2000}
+.order-modal.show{display:flex}
+.order-modal .overlay{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.order-modal .dialog{position:relative;background:#fff;border-radius:12px;padding:24px;width:min(800px,95vw);max-width:95vw;max-height:90vh;overflow:auto;box-shadow:0 20px 50px rgba(0,0,0,.25);z-index:10}
+.order-modal .order-modal-close{position:absolute;right:12px;top:12px;background:transparent;border:none;font-size:1.3rem;color:#666;cursor:pointer}
+.order-modal .product-preview{flex:0 0 auto;min-width:120px;max-width:150px}
+.order-modal .product-preview img{width:100%;max-width:120px;height:auto;object-fit:contain;background:#F5F5F5;padding:12px;border-radius:8px}
+.order-modal .order-modal-body{min-width:0}
+.order-modal .order-modal-body .d-flex{flex-wrap:wrap;gap:16px}
+.order-modal .order-modal-body .flex-grow-1{min-width:200px;flex:1 1 auto;max-width:100%}
+.order-modal label{font-size:0.85rem;color:#444;display:block;margin-bottom:6px}
+.order-modal select,.order-modal input[type=number]{width:100%;max-width:100%;padding:8px 10px;border:1px solid #E5E5E5;border-radius:8px;background:#fff;box-sizing:border-box}
+.order-modal #orderModalName,.order-modal #orderModalPrice{word-wrap:break-word;overflow-wrap:break-word}
+
+/* Add to cart button - same style as order but larger */
+.add-to-cart-btn{display:inline-flex;align-items:center;justify-content:center;width:100%;height:48px;border-radius:8px;background:#fff;color:#111;border:1px solid #E5E5E5;font-weight:700;padding:0 16px;cursor:pointer;transition:all .18s}
+.add-to-cart-btn:hover{background:#111;color:#fff;border-color:#111;transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,0,0,.18)}
+
+/* Ensure modal inputs & labels responsive */
+.order-modal .dialog .d-flex > .flex-grow-1{min-width:0}
+
+/* Responsive modal adjustments */
+@media (max-width: 768px) {
+    .order-modal .dialog {
+        width: 95vw !important;
+        padding: 16px !important;
+    }
+    .order-modal .product-preview {
+        max-width: 100px !important;
+    }
+    .order-modal .product-preview img {
+        max-width: 100px !important;
+    }
+    .order-modal .order-modal-body .flex-grow-1 {
+        min-width: 100% !important;
+        margin-top: 12px;
+    }
+}
+
+/* Cart item responsive */
+@media (max-width: 768px) {
+    .card-body .row > [class*="col-md"] {
+        margin-bottom: 12px;
+    }
+    .card-body .row > .col-md-5 {
+        margin-bottom: 8px;
+    }
+}

@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+@* Trang chủ: ghép các phần Hero, Feature, Deals, Shop-By-Icon *@
+@await Html.PartialAsync("~/Views/Home/Partials/_HeroSection.cshtml")
+
+@await Html.PartialAsync("~/Views/Home/Partials/_FeatureSection.cshtml")
+
+@await Html.PartialAsync("~/Views/Home/Partials/_SpecialDealsSection.cshtml")
+
+@await Html.PartialAsync("~/Views/Home/Partials/_ShopByDetailSection.cshtml")
+

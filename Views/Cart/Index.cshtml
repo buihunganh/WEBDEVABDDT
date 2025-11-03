@@ -1,0 +1,461 @@
+﻿@model List<ShoppingCartItem>
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+@* Trang giỏ hàng: hiển thị items, cập nhật/xóa, modal checkout và xác nhận thanh toán *@
+<div class="container-fluid px-4 my-4">
+    <h1 class="fw-bold mb-4">Shopping Cart</h1>
+
+    @if ((ViewBag.RequireLogin ?? false) == true)
+    {
+        <div class="d-flex justify-content-center">
+            <div class="shadow-sm border-0 rounded-4 p-4" style="max-width:640px; width:100%; background: linear-gradient(180deg,#ffffff 0%, #f8f9fa 100%);">
+                <div class="text-center">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width:56px; height:56px; background:#000; color:#fff;">
+                        <i class="bi bi-lock-fill fs-5"></i>
+                    </div>
+                    <h2 class="fw-semibold mb-2" style="font-size:22px;">Please sign in to shop</h2>
+                    <p class="text-muted mb-4">Sign in to view your cart and proceed to checkout.</p>
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-dark" href="@Url.Action("Login","Account")">Sign in</a>
+                        <a class="btn btn-outline-dark" href="@Url.Action("Index","Products")">Continue shopping</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else if (Model == null || Model.Count == 0)
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-cart fs-1 text-muted"></i>
+            <p class="text-muted">Your cart is empty</p>
+            <a href="@Url.Action("Index", "Products")" class="btn btn-dark">Continue Shopping</a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-8">
+                @foreach (var item in Model)
+                {
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-12 col-md-3 mb-2 mb-md-0">
+                                    <div class="bg-light d-flex align-items-center justify-content-center" style="height: 100px;">
+                                        @if(!string.IsNullOrEmpty(item.ImageUrl)){
+                                            <img src="@item.ImageUrl" class="img-fluid" style="max-height:80px;" alt="@item.ProductName" />
+                                        } else {
+                                            <i class="bi bi-image fs-1 text-secondary"></i>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-5" style="min-width: 0; word-wrap: break-word; overflow-wrap: break-word;">
+                                    <h5 class="h6 mb-1" style="word-wrap: break-word; overflow-wrap: break-word;">@item.ProductName</h5>
+                                    <div class="small text-muted mb-1">@String.Format(System.Globalization.CultureInfo.GetCultureInfo("en-US"), "{0:C}", item.Price)</div>
+                                    <div class="small text-muted" style="word-wrap: break-word; overflow-wrap: break-word;">Size: @item.Size @if(!string.IsNullOrEmpty(item.Color)){ <span>• Color: @item.Color</span> }</div>
+                                </div>
+                                <div class="col-6 col-md-2 mb-2 mb-md-0" style="min-width: 80px;">
+                                    <label class="small text-muted d-block d-md-none mb-1">Quantity</label>
+                                    <input type="number" class="form-control form-control-sm" value="@item.Quantity" min="1"
+                                           data-product-id="@item.ProductId" data-size="@item.Size" data-color="@item.Color"
+                                           onchange="updateQuantityElem(this)" style="min-width: 60px;">
+                                </div>
+                                <div class="col-6 col-md-2 text-start text-md-end" style="min-width: 0;">
+                                    <label class="small text-muted d-block d-md-none mb-1">Total</label>
+                                    <p class="fw-bold mb-1 mb-md-0">@String.Format(System.Globalization.CultureInfo.GetCultureInfo("en-US"), "{0:C}", item.Price * item.Quantity)</p>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="removeItemElem(this)" data-product-id="@item.ProductId" data-size="@item.Size" data-color="@item.Color">
+                                        <i class="bi bi-trash"></i> <span class="d-md-none">Remove</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="mb-3">Order Summary</h5>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal</span>
+                            <span>@String.Format(System.Globalization.CultureInfo.GetCultureInfo("en-US"), "{0:C}", Model.Sum(x => x.Price * x.Quantity))</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Tax</span>
+                            <span>@String.Format(System.Globalization.CultureInfo.GetCultureInfo("en-US"), "{0:C}", 0)</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3 fw-bold">
+                            <span>Total</span>
+                            <span>@String.Format(System.Globalization.CultureInfo.GetCultureInfo("en-US"), "{0:C}", Model.Sum(x => x.Price * x.Quantity))</span>
+                        </div>
+                        <button id="checkoutBtn" class="btn btn-dark w-100">Checkout</button>
+                        <a href="@Url.Action("Index", "Products")" class="btn btn-outline-dark w-100 mt-2">Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Checkout modal re-uses order-modal styles already in nike-style.css -->
+<div id="checkoutModal" class="order-modal" aria-hidden="true">
+  <div class="overlay" aria-hidden="true"></div>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="checkoutModalTitle">
+    <button type="button" class="order-modal-close" aria-label="Close">&times;</button>
+    <div class="order-modal-body">
+      <h5 id="checkoutModalTitle" class="mb-3">Checkout</h5>
+      <div class="row">
+        <div class="col-12 col-md-6">
+          <div class="mb-2">
+            <label for="checkoutName">Full name <span class="text-danger">*</span></label>
+            <input id="checkoutName" class="form-control" type="text" required minlength="2" maxlength="100" pattern="^[a-zA-Z\s'-]+$" />
+            <div id="checkoutNameError" class="text-danger small mt-1" style="display:none;"></div>
+          </div>
+          <div class="mb-2">
+            <label for="checkoutAddress">Delivery address (for notification only) <span class="text-danger">*</span></label>
+            <input id="checkoutAddress" class="form-control" type="text" required minlength="10" maxlength="200" placeholder="Address for order delivery notifications" />
+            <div id="checkoutAddressError" class="text-danger small mt-1" style="display:none;"></div>
+          </div>
+          <div class="mb-2">
+            <label for="checkoutEmail">Email (for notifications only) <span class="text-danger">*</span></label>
+            <input id="checkoutEmail" class="form-control" type="email" required maxlength="100" placeholder="Email to receive order updates" />
+            <div id="checkoutEmailError" class="text-danger small mt-1" style="display:none;"></div>
+          </div>
+          <div class="mb-2">
+            <label for="checkoutPhone">Phone <span class="text-danger">*</span></label>
+            <input id="checkoutPhone" class="form-control" type="tel" required pattern="^(\+84|0)[0-9]{9,10}$" placeholder="e.g., 0912345678 or +84912345678" />
+            <div id="checkoutPhoneError" class="text-danger small mt-1" style="display:none;"></div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 mt-3 mt-md-0">
+          <h6 class="mb-2">Your items</h6>
+          <div id="checkoutItemsList" style="max-height:280px;overflow:auto;padding-right:6px;"></div>
+        </div>
+      </div>
+      <div class="mt-2">
+        <label class="form-label">Payment method</label>
+        <div class="d-flex gap-3 align-items-center">
+          <div><input type="radio" name="paymentMethod" id="pmTransfer" value="transfer" checked/> <label for="pmTransfer">Bank transfer / QR</label></div>
+          <div><input type="radio" name="paymentMethod" id="pmCod" value="cod"/> <label for="pmCod">Cash on delivery</label></div>
+        </div>
+      </div>
+      <div class="mt-3">
+        <button id="confirmOrderBtn" class="add-to-cart-btn">Confirm order</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Payment success modal (English) -->
+<div id="paymentSuccessModal" class="order-modal" aria-hidden="true">
+  <div class="overlay" aria-hidden="true"></div>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="paymentSuccessTitle">
+    <button type="button" class="order-modal-close" aria-label="Close">&times;</button>
+    <div class="order-modal-body text-center">
+      <h5 id="paymentSuccessTitle" class="mb-3">Payment successful</h5>
+      <p>Your order (ID: <span id="successOrderId"></span>) has been placed. It will be delivered within 2-4 business days.</p>
+      <div class="mt-3 d-flex gap-2 justify-content-center">
+         <a id="continueShopBtn" href="@Url.Action("Index","Products")" class="btn btn-dark">Continue shopping</a>
+         <button id="closeSuccessBtn" class="btn btn-outline-dark">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function(){
+            // embed server cart data for client-side review
+            const cartData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model ?? new List<BTL_WEBDEV2025.Models.ShoppingCartItem>()));
+
+            window.updateQuantityElem = function updateQuantityElem(el){
+                const productId = el.dataset.productId;
+                const size = el.dataset.size || '';
+                const color = el.dataset.color || '';
+                const quantity = parseInt(el.value||'1',10) || 1;
+                $.ajax({
+                    url: '/Cart/UpdateCart',
+                    type: 'POST',
+                    data: {
+                        productId: productId,
+                        size: size,
+                        color: color,
+                        quantity: quantity
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            location.reload();
+                        }
+                    }
+                });
+            }
+
+            window.removeItemElem = function removeItemElem(el){
+                if (!confirm('Are you sure you want to remove this item?')) return;
+                const productId = el.dataset.productId;
+                const size = el.dataset.size || '';
+                const color = el.dataset.color || '';
+                $.ajax({
+                    url: '/Cart/RemoveFromCart',
+                    type: 'POST',
+                    data: { productId: productId, size: size, color: color },
+                    success: function(response) {
+                        if (response.success) {
+                            location.reload();
+                        }
+                    }
+                });
+            }
+
+            const modal = document.getElementById('checkoutModal');
+            if(!modal) return;
+            const overlay = modal.querySelector('.overlay');
+            const closeBtn = modal.querySelector('.order-modal-close');
+            const itemsList = document.getElementById('checkoutItemsList');
+            const confirmBtn = document.getElementById('confirmOrderBtn');
+
+            function showModal(){ modal.classList.add('show'); modal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+            function hideModal(){ modal.classList.remove('show'); modal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+
+            function renderItems(){
+                itemsList.innerHTML = '';
+                if(!Array.isArray(cartData) || cartData.length===0){ itemsList.innerHTML = '<div class="text-muted">No items</div>'; return; }
+                // normalize property names coming from server (PascalCase) to JS-friendly (camelCase)
+                const normalized = cartData.map(i => ({
+                    productName: i.productName ?? i.ProductName ?? '',
+                    imageUrl: i.imageUrl ?? i.ImageUrl ?? '',
+                    price: Number(i.price ?? i.Price ?? 0),
+                    quantity: Number(i.quantity ?? i.Quantity ?? 1),
+                    size: i.size ?? i.Size ?? '',
+                    color: i.color ?? i.Color ?? ''
+                }));
+
+                normalized.forEach(i=>{
+                    const div = document.createElement('div');
+                    div.style.display='flex'; div.style.gap='10px'; div.style.alignItems='center'; div.style.padding='8px 0'; div.style.borderBottom='1px solid #eee';
+                    const imgWrap = document.createElement('div'); imgWrap.style.width='56px'; imgWrap.style.height='56px'; imgWrap.style.flex='0 0 56px';
+                    if(i.imageUrl){ const im=document.createElement('img'); im.src=i.imageUrl; im.style.maxWidth='56px'; im.style.maxHeight='56px'; im.style.objectFit='contain'; imgWrap.appendChild(im); }
+                    else { imgWrap.innerHTML='<i class="bi bi-image text-secondary" style="font-size:24px"></i>'; }
+                    const meta = document.createElement('div'); meta.style.flex='1'; meta.innerHTML = `<div style="font-weight:600">${i.productName}</div><div style="font-size:0.9rem;color:#666">Qty: ${i.quantity} • Size: ${i.size} ${i.color?('• Color: '+i.color):''} • $${(i.price).toFixed(2)}</div>`;
+                    div.appendChild(imgWrap); div.appendChild(meta);
+                    itemsList.appendChild(div);
+                });
+            }
+
+            // Use event delegation so clicks are captured even if button is re-rendered
+            document.addEventListener('click', function(e){
+                const btn = e.target.closest('#checkoutBtn');
+                if(!btn) return;
+                e.preventDefault();
+                // require login client-side
+                if(typeof window.isAuthenticated !== 'undefined' && (window.isAuthenticated === false || window.isAuthenticated === 'false')){
+                    const toast = document.createElement('div');
+                    toast.textContent = 'Please sign in to proceed to checkout';
+                    toast.style.cssText = 'position:fixed;right:20px;bottom:20px;background:#ef4a64;color:#fff;padding:10px 14px;border-radius:8px;z-index:99999;box-shadow:0 8px 20px rgba(0,0,0,0.2);';
+                    document.body.appendChild(toast);
+                    setTimeout(()=>{ toast.remove(); window.location.href = '/Account/Login'; },1200);
+                    return;
+                }
+                renderItems();
+                showModal();
+            });
+
+            overlay.addEventListener('click', hideModal);
+            closeBtn.addEventListener('click', hideModal);
+            document.addEventListener('keydown', function(e){ if(e.key==='Escape' && modal.classList.contains('show')) hideModal(); });
+
+            function clearErrors(){
+                ['checkoutName', 'checkoutAddress', 'checkoutEmail', 'checkoutPhone'].forEach(id => {
+                    const errorEl = document.getElementById(id + 'Error');
+                    if(errorEl) {
+                        errorEl.style.display = 'none';
+                        errorEl.textContent = '';
+                    }
+                    const inputEl = document.getElementById(id);
+                    if(inputEl) inputEl.classList.remove('is-invalid');
+                });
+            }
+
+            function showError(fieldId, message){
+                const errorEl = document.getElementById(fieldId + 'Error');
+                const inputEl = document.getElementById(fieldId);
+                if(errorEl) {
+                    errorEl.textContent = message;
+                    errorEl.style.display = 'block';
+                }
+                if(inputEl) inputEl.classList.add('is-invalid');
+            }
+
+            function validateForm(){
+                clearErrors();
+                let isValid = true;
+
+                const name = document.getElementById('checkoutName').value.trim();
+                const address = document.getElementById('checkoutAddress').value.trim();
+                const email = document.getElementById('checkoutEmail').value.trim();
+                const phone = document.getElementById('checkoutPhone').value.trim();
+                const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
+
+                if(!name || name.length < 2 || name.length > 100){
+                    showError('checkoutName', 'Full name must be between 2 and 100 characters');
+                    isValid = false;
+                } else {
+                    const namePattern = new RegExp('^[a-zA-Z\\s\'-]+$');
+                    if(!namePattern.test(name)){
+                        showError('checkoutName', 'Full name can only contain letters, spaces, hyphens, and apostrophes');
+                        isValid = false;
+                    }
+                }
+
+                if(!address || address.length < 10 || address.length > 200){
+                    showError('checkoutAddress', 'Address must be between 10 and 200 characters');
+                    isValid = false;
+                }
+
+                if(!email){
+                    showError('checkoutEmail', 'Email is required');
+                    isValid = false;
+                } else {
+                    const atSymbol = '@@';
+                    const hasAt = email.indexOf(atSymbol.substring(0, 1)) > 0;
+                    const atPos = email.indexOf(atSymbol.substring(0, 1));
+                    const hasDot = email.indexOf('.') > atPos;
+                    if(!hasAt || !hasDot || atPos === -1){
+                        showError('checkoutEmail', 'Please enter a valid email address');
+                        isValid = false;
+                    } else if(email.length > 100){
+                        showError('checkoutEmail', 'Email must not exceed 100 characters');
+                        isValid = false;
+                    }
+                }
+
+                if(!phone){
+                    showError('checkoutPhone', 'Phone number is required');
+                    isValid = false;
+                } else {
+                    const phonePattern = new RegExp('^(\\+84|0)[0-9]{9,10}$');
+                    if(!phonePattern.test(phone)){
+                        showError('checkoutPhone', 'Please enter a valid Vietnamese phone number (e.g., 0912345678 or +84912345678)');
+                        isValid = false;
+                    }
+                }
+
+                if(!paymentMethod){
+                    alert('Please select a payment method');
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            confirmBtn.addEventListener('click', async function(){
+                if(!validateForm()) return;
+
+                const name = document.getElementById('checkoutName').value.trim();
+                const address = document.getElementById('checkoutAddress').value.trim();
+                const email = document.getElementById('checkoutEmail').value.trim();
+                const phone = document.getElementById('checkoutPhone').value.trim();
+                const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
+
+                try{
+                    const form = new URLSearchParams();
+                    form.append('FullName', name);
+                    form.append('Address', address);
+                    form.append('Email', email);
+                    form.append('Phone', phone);
+                    form.append('PaymentMethod', paymentMethod);
+
+                    const res = await fetch('/Cart/Checkout', { method: 'POST', headers: { 'Content-Type':'application/x-www-form-urlencoded' }, body: form.toString() });
+                    if(!res.ok) throw new Error('Network error');
+                    const j = await res.json();
+                    if(j.needLogin){ alert('Please sign in to complete checkout'); window.location.href='/Account/Login'; return; }
+                    if(j.errors && j.errors.length > 0){
+                        clearErrors();
+                        j.errors.forEach(function(err){
+                            const fieldMap = {
+                                'FullName': 'checkoutName',
+                                'Address': 'checkoutAddress',
+                                'Email': 'checkoutEmail',
+                                'Phone': 'checkoutPhone'
+                            };
+                            const fieldId = fieldMap[err.Field] || err.Field.toLowerCase().replace(/([A-Z])/g, '$1').replace(/^./, str => str.toLowerCase());
+                            if(err.Errors && err.Errors.length > 0){
+                                showError(fieldId, err.Errors[0]);
+                            }
+                        });
+                        return;
+                    }
+                    if(j.success){
+                        if(j.paymentInstructions){
+                            itemsList.innerHTML = '<div class="mt-2 p-2" style="background:#fafafa;border:1px solid #eee;border-radius:8px">' + j.paymentInstructions + '</div>';
+                        }
+                        const toast = document.createElement('div');
+                        toast.textContent = 'Order placed';
+                        toast.style.cssText = 'position:fixed;right:20px;bottom:20px;background:#111;color:#fff;padding:10px 14px;border-radius:8px;z-index:99999;box-shadow:0 8px 20px rgba(0,0,0,0.2);';
+                        document.body.appendChild(toast);
+
+                        if(paymentMethod === 'transfer' && j.orderId){
+                            const orderId = j.orderId;
+                            const poll = setInterval(async () => {
+                                try{
+                                    const r = await fetch('/Cart/CheckPaymentStatus?orderId=' + encodeURIComponent(orderId), { credentials: 'same-origin' });
+                                    if(r.ok){ const s = await r.json(); if(s.paid){
+                                        clearInterval(poll);
+                                        toast.textContent = 'Payment confirmed';
+                                        
+                                        setTimeout(async () => {
+                                            try {
+                                                await fetch('/Cart/ClearCart', { method: 'POST', credentials: 'same-origin' });
+                                            } catch(e) { }
+
+                                            const mainContainer = document.querySelector('.container-fluid.px-4.my-4');
+                                            if(mainContainer){
+                                                const leftCol = mainContainer.querySelector('.row .col-md-8');
+                                                const rightCol = mainContainer.querySelector('.row .col-md-4');
+                                                if(leftCol) leftCol.innerHTML = '<div class="text-center py-5"><i class="bi bi-cart fs-1 text-muted"></i><p class="text-muted">Your cart is empty</p><a href="' + '@Url.Action("Index","Products")' + '" class="btn btn-dark">Continue Shopping</a></div>';
+                                                if(rightCol) rightCol.innerHTML = '<div class="card"><div class="card-body"><h5 class="mb-3">Order Summary</h5><div class="d-flex justify-content-between mb-2"><span>Subtotal</span><span>$0</span></div><div class="d-flex justify-content-between mb-3"><span>Tax</span><span>$0</span></div><hr><div class="d-flex justify-content-between mb-3 fw-bold"><span>Total</span><span>$0</span></div><a href="' + '@Url.Action("Index","Products")' + '" class="btn btn-dark w-100">Continue Shopping</a></div></div>';
+                                            }
+
+                                            const badge = document.getElementById('cartBadge');
+                                            if(badge){ badge.textContent = '0'; badge.style.display = 'none'; }
+
+                                            try {
+                                                showPaymentSuccessModal(orderId);
+                                            } catch(e){ }
+
+                                            setTimeout(()=>{ toast.remove(); },1500);
+                                        }, 5000);
+                                    } }
+                                }catch(e){ }
+                            }, 2000);
+                        } else {
+                            setTimeout(()=>{ toast.remove(); location.reload(); },1200);
+                        }
+                     } else {
+                         alert(j.message || 'Failed to place order');
+                     }
+                }catch(e){ alert('Error placing order'); }
+            });
+
+            const successModal = document.getElementById('paymentSuccessModal');
+            if(successModal){
+                const successOverlay = successModal.querySelector('.overlay');
+                const successClose = successModal.querySelector('.order-modal-close');
+                const successOrderIdEl = document.getElementById('successOrderId');
+                const successCloseBtn = document.getElementById('closeSuccessBtn');
+                function showPaymentSuccessModal(orderId){
+                    if(successOrderIdEl) successOrderIdEl.textContent = orderId || '';
+                    successModal.classList.add('show'); successModal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
+                }
+                function hidePaymentSuccessModal(){ successModal.classList.remove('show'); successModal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+                successOverlay.addEventListener('click', hidePaymentSuccessModal);
+                successClose.addEventListener('click', hidePaymentSuccessModal);
+                successCloseBtn.addEventListener('click', hidePaymentSuccessModal);
+            }
+
+        })();
+    </script>
+}

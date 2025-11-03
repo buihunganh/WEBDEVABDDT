@@ -1,0 +1,44 @@
+@* Shop by Icon: danh sách biểu tượng thương hiệu chạy ngang *@
+<section class="shop-by-detail my-5">
+    <div class="container-fluid px-4">
+        <h2 class="section-title text-center fw-bold mb-4">Shop by Icon</h2>
+        <div class="sbd-track">
+@{
+    var icons = (ViewBag.BrandIcons as IEnumerable<(string Brand, string ImageUrl)>)?.ToList() ?? new List<(string,string)>();
+    
+    if (icons.Count == 0) {
+        icons.Add(("Nike", "/media/images/home/nike1.jpg"));
+        icons.Add(("Adidas", "/media/images/home/adidas1.jpg"));
+        icons.Add(("Balenciaga", "/media/images/home/balenciaga1.jpg"));
+    }
+}
+@foreach (var it in icons)
+{
+            <div class="sbd-item">
+                <a class="sbd-card d-block text-decoration-none" asp-controller="Products" asp-action="Men" asp-fragment="brand-@it.Brand">
+                    <div class="sbd-thumb">
+                        <img src="@it.ImageUrl" alt="@it.Brand" loading="lazy" decoding="async" />
+                    </div>
+                    <div class="sbd-label">@it.Brand</div>
+                </a>
+            </div>
+}
+@for (var k = 0; k < 2; k++)
+{
+    foreach (var it in icons)
+    {
+            <div class="sbd-item" aria-hidden="true">
+                <a class="sbd-card d-block text-decoration-none" asp-controller="Products" asp-action="Men" asp-fragment="brand-@it.Brand">
+                    <div class="sbd-thumb">
+                        <img src="@it.ImageUrl" alt="" loading="lazy" decoding="async" />
+                    </div>
+                    <div class="sbd-label">@it.Brand</div>
+                </a>
+            </div>
+    }
+}
+        </div>
+    </div>
+</section>
+
+

@@ -1,0 +1,37 @@
+@* Special deals: hiển thị tối đa 4 sản phẩm giảm giá *@
+<section class="special-deals-section my-5 py-5" style="background-color: #F5F5F5;">
+    <div class="container-fluid px-4">
+        <h2 class="section-title text-center fw-bold mb-5">Special deals</h2>
+        <div class="row g-4">
+@{
+    var deals = ViewBag.Deals as IEnumerable<BTL_WEBDEV2025.Models.Product> ?? new List<BTL_WEBDEV2025.Models.Product>();
+    var j = 0;
+}
+@foreach (var p in (ViewBag.Deals as IEnumerable<BTL_WEBDEV2025.Models.Product> ?? new List<BTL_WEBDEV2025.Models.Product>()))
+{
+    if (j++ >= 4) { break; }
+            <div class="col-md-6 col-lg-3">
+                <div class="deal-card h-100 bg-white border-0 overflow-hidden hover-lift">
+                    <div class="deal-image bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <img src="@p.ImageUrl" alt="@p.Name" loading="lazy" decoding="async" />
+                    </div>
+                    <div class="p-3">
+                        <h6 class="fw-bold mb-1">@p.Name</h6>
+                        <p class="text-muted small mb-1">@p.Description</p>
+                        <div class="d-flex align-items-center gap-2">
+                            @if (p.DiscountPrice.HasValue) {
+                                <span class="text-danger fw-bold">@String.Format(System.Globalization.CultureInfo.GetCultureInfo("en-US"), "{0:C}", p.DiscountPrice.Value)</span>
+                                <span class="text-muted text-decoration-line-through small">@String.Format(System.Globalization.CultureInfo.GetCultureInfo("en-US"), "{0:C}", p.Price)</span>
+                            } else {
+                                <span class="fw-bold">@String.Format(System.Globalization.CultureInfo.GetCultureInfo("en-US"), "{0:C}", p.Price)</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+}
+        </div>
+    </div>
+</section>
+
+

@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    @* Layout chung: nạp CSS/JS và sections *@
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ABDDT Store</title>
+    <link rel="icon" type="image/png" href="~/favicon.png" asp-append-version="true" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/nike-style.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="~/BTL_WEBDEV2025.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    @* Preloader overlay hiển thị vòng tròn tải *@
+    <div id="preloader" aria-hidden="true">
+        <div class="loader-ring"></div>
+    </div>
+    @* Thanh top và header chính *@
+    @await Html.PartialAsync("Partials/_TopBar")
+    
+    @await Html.PartialAsync("Partials/_MainHeader")
+    
+    @* Nội dung trang *@
+    <main role="main">
+        @RenderBody()
+    </main>
+    
+    @* Footer *@
+    @await Html.PartialAsync("Partials/_Footer")
+    
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
